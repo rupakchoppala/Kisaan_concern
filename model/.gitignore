@@ -1,0 +1,11 @@
+# Ignore a folder in the root directory
+myenv/
+datasets/
+uploads/
+requirements.txt/
+# Ignore nested folders
+utils/__pycache__/
+
+
+# # Ignore all folders named 'node_modules' anywhere in the project
+# **/node_modules/

@@ -4,7 +4,7 @@ import Layout from "../layouts/layout";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 const FarmerCart = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ const FarmerCart = () => {
   const updateQuantity = async (productId, newQty) => {
     try {
       setLoading(true);
-      await axiosInstance.put("api/cart/update_ferticart", {
+      await axiosInstance.put("api/cart/update_ferticart",{
         productId,
         quantity: newQty,
       });
@@ -87,23 +87,35 @@ const FarmerCart = () => {
       }, 0);
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
     if (selectedProducts.length === 0) {
       alert("Please select at least one product to buy.");
       return;
     }
-    // Redirect or handle logic with selectedProducts
-    console.log("Buying these products:", selectedProducts);
-    alert("Proceeding to buy selected products!");
+  
+    try {
+      setLoading(true);
+      const res = await axiosInstance.post("/api/orders/placeOrder", {
+        products: selectedProducts,
+      });
+      console.log("Placing order with products:", selectedProducts);
+      console.log("Order response:", res.data); 
+      alert("✅ Order placed successfully!");
+      setSelectedProducts([]);
+      await GetallFetilizers(); // refresh cart
+    } catch (error) {
+      console.error("Order error:", error);
+      alert("❌ Failed to place order. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
-
   return (
     <Layout>
       <section className="p-6 bg-green-50 min-h-screen">
         <h2 className="text-3xl font-extrabold text-center text-green-900 mb-8 tracking-wide">
           🧪 Fertilizer Cart
         </h2>
-
         {products?.length === 0 ? (
           <p className="text-center text-gray-600 italic">Your cart is empty.</p>
         ) : (

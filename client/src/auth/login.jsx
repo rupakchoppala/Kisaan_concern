@@ -24,7 +24,9 @@ const Login = () => {
 const handleLogin = async (e) => {
   e.preventDefault();
   try {
-    const res = await axiosInstance.post('/api/auth/login', userData);
+    const res = await axiosInstance.post('/api/auth/login', userData,{
+      withCredentials: true,
+    });
 
     // Save token and user in cookies
     Cookies.set('token', res.data.token, { expires: 7 }); // 7 days expiry
@@ -47,8 +49,6 @@ const handleLogin = async (e) => {
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:3000/auth/google";
   };
-  
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-100 via-white to-green-100 font-dmsans">

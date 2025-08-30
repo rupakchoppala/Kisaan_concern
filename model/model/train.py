@@ -1,3 +1,4 @@
+# train.py
 import os
 from datasets import Dataset
 from transformers import (
@@ -34,7 +35,7 @@ def collate_fn(batch):
     return {"pixel_values": pixel_values, "labels": labels}
 
 def train_model():
-    data_dir = "../datasets"
+    data_dir = "/home/akshay/Downloads/Kisaan_concern/datasets"
     raw_data, label2id = load_and_label_images(data_dir)
     dataset = Dataset.from_dict(raw_data)
     dataset = dataset.train_test_split(test_size=0.2)
@@ -49,7 +50,7 @@ def train_model():
         num_labels=len(label2id),
         id2label={v: k for k, v in label2id.items()},
         label2id=label2id,
-        ignore_mismatched_sizes=True 
+        ignore_mismatched_sizes=True
     )
 
     training_args = TrainingArguments(
@@ -58,6 +59,7 @@ def train_model():
         num_train_epochs=5,
         logging_dir="./logs",
         learning_rate=5e-5,
+        save_strategy="epoch"
     )
 
     trainer = Trainer(
@@ -70,10 +72,13 @@ def train_model():
     )
 
     trainer.train()
-    trainer.save_model("./model/plant-disease-classifier")
+
+    # ✅ save model + processor
+    model.save_pretrained("./model/plant-disease-classifier")
     image_processor.save_pretrained("./model/plant-disease-classifier")
 
     return "✅ Training completed and model saved to ./model/plant-disease-classifier"
+
 if __name__ == "__main__":
     result = train_model()
     print(result)

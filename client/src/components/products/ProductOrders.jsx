@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import Layout from "../layouts/layout";
 import axiosInstance from "../../utils/axiosInstance";
 
-const OrderList = () => {
+const ProductOrderList = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const { data } = await axiosInstance.get("/api/orders/myOrders", {
+        const { data } = await axiosInstance.get("/api/orders/myproductOrders", {
           withCredentials: true,
         });
         setOrders(data.orders);
@@ -110,4 +109,4 @@ const OrderList = () => {
   );
 };
 
-export default OrderList;
+export default ProductOrderList;

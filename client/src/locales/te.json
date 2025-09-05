@@ -1,10 +1,16 @@
 {
-    "welcome": "కిసాన్ కన్‌సర్న్‌కు స్వాగతం",
-    "login": "లాగిన్",
-    "register": "రజిస్టర్ చేయండి",
-    "marketplace": "మార్కెట్‌ప్లేస్",
-    "awareness": "జागरూక",
-    "fertilizers": "ఎరువులు",
-    "home": "హోమ్"
-  }
-  
+  "welcome": "కిసాన్ కన్‌సర్న్‌కు స్వాగతం",
+  "login": "లాగిన్",
+  "register": "రజిస్టర్ చేయండి",
+  "home": "హోమ్",
+  "diagnose": "డయాగ్నోస్",
+  "marketplace": "మార్కెట్‌ప్లేస్",
+  "awareness": "జాగ్రూకత",
+  "fertilizers": "ఎరువులు",
+  "productDetails": "ఉత్పత్తి వివరాలు",
+  "fertilizerCart": "ఎరువు కార్ట్",
+  "productCart": "ఉత్పత్తి కార్ట్",
+  "orders": "ఆర్డర్లు",
+  "more": "మరిన్ని",
+  "cart": "కార్ట్"
+}

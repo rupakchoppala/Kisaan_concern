@@ -1,10 +1,16 @@
 {
-    "welcome": "किसान कंसर्न में आपका स्वागत है",
-    "login": "लॉगिन",
-    "register": "रजिस्टर करें",
-    "marketplace": "बाजार",
-    "awareness": "जागरूकता",
-    "fertilizers": "उर्वरक",
-    "home": "मुख पृष्ठ"
-  }
-  
+  "welcome": "किसान कंसर्न में आपका स्वागत है",
+  "login": "लॉगिन",
+  "register": "रजिस्टर करें",
+  "home": "मुख पृष्ठ",
+  "diagnose": "डायग्नोज़",
+  "marketplace": "बाजार",
+  "awareness": "जागरूकता",
+  "fertilizers": "उर्वरक",
+  "productDetails": "उत्पाद विवरण",
+  "fertilizerCart": "उर्वरक कार्ट",
+  "productCart": "उत्पाद कार्ट",
+  "orders": "ऑर्डर",
+  "more": "और",
+  "cart": "कार्ट"
+}

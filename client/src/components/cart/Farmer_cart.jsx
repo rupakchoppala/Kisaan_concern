@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 const FarmerCart = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -65,7 +66,6 @@ const FarmerCart = () => {
       console.error("Failed to remove item", err);
     }
   };
-
   const toggleProductSelection = (id) => {
     setSelectedProducts((prevSelected) =>
       prevSelected.includes(id)
@@ -88,26 +88,66 @@ const FarmerCart = () => {
   };
 
   const handleBuyNow = async () => {
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
     if (selectedProducts.length === 0) {
-      alert("Please select at least one product to buy.");
+      alert("Please select at least one product.");
       return;
     }
   
-    try {
-      setLoading(true);
-      const res = await axiosInstance.post("/api/orders/placeOrder", {
+    // Show modal or simple prompt
+    const choice = window.prompt("Choose Payment:\n1 = Cash on Delivery\n2 = Online Payment");
+  
+    if (choice === "1") {
+      // COD
+      await axiosInstance.post("/api/orders/placeOrder", {
         products: selectedProducts,
+        paymentMethod: "COD",
       });
-      console.log("Placing order with products:", selectedProducts);
-      console.log("Order response:", res.data); 
-      alert("✅ Order placed successfully!");
+      alert("✅ Order placed with Cash on Delivery!");
       setSelectedProducts([]);
-      await GetallFetilizers(); // refresh cart
-    } catch (error) {
-      console.error("Order error:", error);
-      alert("❌ Failed to place order. Please try again.");
-    } finally {
-      setLoading(false);
+      await GetallFetilizers();
+    } else if (choice === "2") {
+     // Prepare product data with price and quantity
+const productsForPayment = selectedProducts.map(pid => {
+  const product = products.find(p => p.productId._id === pid);
+  const price = parseFloat((product.productId.sale_price || product.productId.original_price).replace("Rs.", "").trim());
+  return { productId: pid, name: product.productId.name, quantity: product.quantity, price };
+});
+const { data: razorOrder } = await axiosInstance.post("/api/payment/createRazorpayOrder", {
+  products: productsForPayment
+});
+      const options = {
+        key:razorpayKey,
+        amount: razorOrder.amount,
+        currency: razorOrder.currency,
+        order_id: razorOrder.id,
+        name: "Kisaan Fertilizers",
+        handler: async (response) => {
+          await axiosInstance.post("/api/payment/verifyPayment", {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            products: productsForPayment.map(item => ({
+              productId: item.productId,   // ✅ this exists
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            
+          });
+          alert("✅ Payment successful! Order placed.");
+          for (const pid of selectedProducts) {
+            await axiosInstance.delete("api/cart/remove_ferticart", { data: { productId: pid } });
+          }
+          setSelectedProducts([]);
+          await GetallFetilizers();
+        },
+        theme: { color: "#22c55e" },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } else {
+      alert("❌ Invalid choice!");
     }
   };
   return (

@@ -1,10 +1,16 @@
 {
-    "welcome": "Welcome to Kisaan Concern",
-    "login": "Login",
-    "register": "Register",
-    "marketplace": "Marketplace",
-    "awareness": "Awareness",
-    "fertilizers": "Fertilizers",
-    "home": "Home"
-  }
-  
+  "welcome": "Welcome to Kisaan Concern",
+  "login": "Login",
+  "register": "Register",
+  "home": "Home",
+  "diagnose": "Diagnose",
+  "marketplace": "Marketplace",
+  "awareness": "Awareness",
+  "fertilizers": "Fertilizers",
+  "productDetails": "Product Details",
+  "fertilizerCart": "Fertilizer Cart",
+  "productCart": "Product Cart",
+  "orders": "Orders",
+  "more": "More",
+  "cart": "Cart"
+}

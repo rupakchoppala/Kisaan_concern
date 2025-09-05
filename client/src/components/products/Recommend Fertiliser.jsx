@@ -83,5 +83,4 @@ const RecomFertilizers = ({ filterNames = [] }) => {
   </div>
   );
 };
-
 export default RecomFertilizers;

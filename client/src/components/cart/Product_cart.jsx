@@ -84,17 +84,82 @@ const ConsumerCart = () => {
         return acc + price * item.quantity;
       }, 0);
   };  
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
     if (selectedProducts.length === 0) {
-      alert("Please select at least one product to buy.");
+      alert("Please select at least one product.");
       return;
     }
-    // Redirect or handle logic with selectedProducts
-    console.log("Buying these products:", selectedProducts);
-    alert("Proceeding to buy selected products!");
+  
+    // Show modal or simple prompt
+    const choice = window.prompt("Choose Payment:\n1 = Cash on Delivery\n2 = Online Payment");
+  
+    if (choice === "1") {
+      // COD
+      await axiosInstance.post("/api/orders/place", {
+        products: selectedProducts,
+        paymentMethod: "COD",
+      });
+      alert("✅ Order placed with Cash on Delivery!");
+      setSelectedProducts([]);
+      await GetallProducts();
+    } else if (choice === "2") {
+     // Prepare product data with price and quantity
+     const productsForPayment = selectedProducts.map(pid => {
+      const product = products.find(p => p.productId._id === pid);
+      if (!product || !product.productId) return null; // skip invalid entries
+    
+      const rawPrice = product.productId.sale_price || product.productId.original_price || product.productId.price || "0";
+      const price = parseFloat(String(rawPrice).replace("Rs.", "").trim());
+    
+      return {
+        productId: pid,
+        name: product.productId.name || "Unknown",
+        quantity: product.quantity || 1,
+        price,
+      };
+    }).filter(Boolean); // remove any null entries
+    
+const { data: razorOrder } = await axiosInstance.post("/api/payment/createRazorpayOrder", {
+  products: productsForPayment
+});
+      const options = {
+        key:razorpayKey,
+        amount: razorOrder.amount,
+        currency: razorOrder.currency,
+        order_id: razorOrder.id,
+        name: "Kisaan Fertilizers",
+        handler: async (response) => {
+          await axiosInstance.post("/api/payment/verifyPayment", {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            products: productsForPayment.map(item => ({
+              productId: item.productId,   // ✅ this exists
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            
+          });
+          await axiosInstance.post("/api/orders/place", {
+            products: selectedProducts,
+          });
+          alert("✅ Payment successful! Order placed.");
+          for (const pid of selectedProducts) {
+            await axiosInstance.delete("api/cart/remove", { data: { productId: pid } });
+          }
+          setSelectedProducts([]);
+          await GetallProducts();
+        },
+        theme: { color: "#22c55e" },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } else {
+      alert("❌ Invalid choice!");
+    }
   };
-
-
   return (
     <Layout>
       <section className="p-6 bg-green-50 min-h-screen">

@@ -58,6 +58,8 @@ import orderRoutes from './controllers/orderController.js'
 app.use('/api/checkout',orderRoutes);
 import order from './routes/orderRoute.js'; // Changed to relative path
 app.use('/api/orders',order);
-import paymentRoutes from './controllers/paymentController.js'
-app.use('/api/payment',paymentRoutes);
+// import paymentRoutes from './controllers/paymentController.js'
+// app.use('/api/payment',paymentRoutes);
+import payment from './routes/paymentRoutes.js';
+app.use('/api/payment',payment);
 export default app;

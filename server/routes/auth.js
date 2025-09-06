@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js"
 import generateToken from "../utils/generateToken.js";
 import passport from "passport";
+import protect from "../middleware/authMiddleware.js";
 const router=express.Router();
 // Signup
 router.post('/signup', async (req, res) => {
@@ -48,6 +49,29 @@ router.post('/signup', async (req, res) => {
     res.status(201).json({ user, token });
   
   });
+  router.get("/me", protect, async (req, res) => {
+    try {
+      const user = await User.findById(req.user._id).select("-password -googleId");
+      if (!user) return res.status(404).json({ message: "User not found" });
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  router.put("/update-address", protect, async (req, res) => {
+    const { address } = req.body;
+    try {
+      const user = await User.findById(req.user._id);
+      if (!user) return res.status(404).json({ message: "User not found" });
+  
+      user.address = address;
+      await user.save();
+      res.json(user); // return updated user
+    } catch (err) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
 router.get('/google', 
 (req,res,next)=>{
   req.session.role = req.query.role || 'farmer';

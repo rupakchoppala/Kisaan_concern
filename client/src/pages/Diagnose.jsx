@@ -5,6 +5,7 @@ import ChatBot from '../components/ChatBot';
 import { FaRobot } from "react-icons/fa";
 import WeatherAlerts from '../components/waether_alert';
 import Layout from '../components/layouts/layout';
+import NearbyFarmers from '../components/map/NearbyFarmer';
 
 const Diagnose = () => {
   const [file, setFile] = useState(null);
@@ -179,6 +180,7 @@ const fetchFertilizerBrands = async (fertilizers = []) => {
         )}
 
         <WeatherAlerts />
+        <NearbyFarmers searchRole='farmer'/>
         <button onClick={() => setChatOpen(true)} className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg z-50">
           <FaRobot className='text-2xl'/>
         </button>

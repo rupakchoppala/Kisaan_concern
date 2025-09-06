@@ -18,6 +18,8 @@ import AuthSuccess from "./auth/AuthSuccess";
 import { Toaster } from 'react-hot-toast';
 import ProductCard from "./components/products/Each_product";
 import FertilizerCard from "./components/products/Each_fertilizer";
+import Profile from "./components/profile";
+import FarmerExpertChat from "./components/chat/chat";
 const App = () => {
   return (
     <>
@@ -39,6 +41,8 @@ const App = () => {
         <Route path="/product/:id" element={<ProductCard />} />
         <Route path="/fertilizer/:id" element={<FertilizerCard />} />
         <Route path="/list_items" element={<FarmerProductUpload />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/chat" element={<FarmerExpertChat />} />
       </Routes>
    
     </Router>

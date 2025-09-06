@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
-
 const orderItemSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Pesticide',
+    ref: 'Product',
     required: true,
   },
   name: String,
@@ -46,5 +45,5 @@ const orderSchema = new mongoose.Schema({
   deliveryDate: { type: Date },
 });
 
-const ProductOrder = mongoose.model('ProductOrder', orderSchema);
-export default ProductOrder;
+const Order = mongoose.model('Order', orderSchema);
+export default Order;

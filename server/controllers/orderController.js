@@ -7,7 +7,6 @@ const router = express.Router();
 
 // POST /api/checkout/buy_now
 import crypto from "crypto";
-
 router.post("/buy_now", protect, async (req, res) => {
   try {
     const { items, paymentInfo } = req.body;

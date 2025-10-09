@@ -55,7 +55,6 @@ io.on("connection", (socket) => {
     console.log("❌ Client disconnected:", socket.id);
   });
 });
-
 // ----------------- Start Server -----------------
 server.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);

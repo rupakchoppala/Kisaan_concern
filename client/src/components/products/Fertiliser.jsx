@@ -21,7 +21,6 @@ const ProductList = () => {
       const data=res.data;
       setProducts(data);
       setFiltered(data);
-
     }
     catch(err){
     console.error('Error fetching the fertilizers',err);

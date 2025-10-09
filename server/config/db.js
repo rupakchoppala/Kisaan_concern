@@ -12,7 +12,7 @@ const connectionString = process.env.MONGO_URI;
 // }
 
 // Connect to MongoDB
-//const conn_string="mongodb+srv://rupak:rupak2003@cluster0.fcbka.mongodb.net/portifolio";
+//const conn_string="mongodb+srv://rupak:rupak2003@cluster0mon".fcbka.mongodb.net/portifolio";
 mongoose.connect(connectionString);
 
 // Get the default connection

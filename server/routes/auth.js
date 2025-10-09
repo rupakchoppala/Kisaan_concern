@@ -41,7 +41,7 @@ router.post('/signup', async (req, res) => {
     if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
     const token = generateToken(user);
     res.cookie('token', token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
@@ -84,10 +84,16 @@ router.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/' }),
   (req, res) => {
     const token = generateToken(req.user._id);
-    console.log("Redirecting to frontend with token:", token);
-    res.redirect(`http://localhost:5173/auth/success?token=${token}`);
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+    res.redirect('http://localhost:5173/auth/success');
   }
 );
+
 
 
   export default router;

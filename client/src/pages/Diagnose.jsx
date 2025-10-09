@@ -59,24 +59,34 @@ const fetchFertilizerBrands = async (fertilizers = []) => {
     const prompt = fineTunePrompt(fertilizers);
 
     const res = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBWrNubp6wFRcsWpyIhNk6S9CJBrYDXyNI",
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBWrNubp6wFRcsWpyIhNk6S9CJBrYDXyNI`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: {
-            text: prompt
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.2,
+            candidateCount: 1,
           },
-          temperature: 0.2,       // low randomness
-          candidate_count: 1      // only one response
         }),
       }
     );
 
-    if (!res.ok) throw new Error("Gemini API failed");
-
+    if (!res.ok) throw new Error(`Gemini API failed: ${res.statusText}`);
     const data = await res.json();
-    const geminiText = data?.candidates?.[0]?.content?.[0]?.text || "";
+
+    console.log("Gemini raw response:", data);
+
+    // ✅ New schema
+    const geminiText =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
     setFormattedData(formatGeminiOutput(geminiText));
   } catch (err) {
     console.error("Gemini error:", err);
@@ -85,6 +95,7 @@ const fetchFertilizerBrands = async (fertilizers = []) => {
     setLoading(false);
   }
 };
+
 
 
   const formatGeminiOutput = (text) => {

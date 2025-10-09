@@ -2,7 +2,6 @@ import express from 'express';
 import passport from "passport";
 //import fileUpload from "express-fileupload";
 import cors from "cors";
-
 import session from 'express-session';
 import './config/passport.js';
 import generateToken from './utils/generateToken.js';
@@ -14,7 +13,6 @@ app.use(cors({
 //app.use(fileUpload({ useTempFiles: true }));
 app.use(express.json({ limit: "50mb" })); // Increase payload size limit
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-
 
 app.use(session({
   secret: "your_secret_key",
@@ -46,7 +44,6 @@ app.get("/auth/google/callback",
     res.redirect(`http://localhost:5173/auth/success?token=${token}`);
   }
 );
-
 app.use("/api/auth",authRoutes);
 import produtRoutes from './routes/product.js'
 app.use('/api/products',produtRoutes);
